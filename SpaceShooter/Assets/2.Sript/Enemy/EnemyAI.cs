@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +16,19 @@ public class EnemyAI : MonoBehaviour
     //상태를 저장할 변수
     public State state = State.PATROL;
 
+    private int allow;
+
+    public static int Allow
+    {
+        get
+        {
+
+        }
+        set
+        {
+
+        }
+    }
     //주인공의 위치를 저장할 변수
     private Transform playerTr;
     //적 캐릭터의 위치를 저장할 변수
@@ -35,6 +46,15 @@ public class EnemyAI : MonoBehaviour
     private WaitForSeconds ws;
     //이동을 제어하는 MoveAgent 클래스를 저장할 변수
     private MoveAgent moveAgent;
+    //Animator 컴포넌트를 저장할 변수
+    private Animator animator;
+    //총알 발사를 제어하는 EnemyFire 클래스를 저장할 변수
+    private EnemyFire enemyFire;
+
+    private readonly int hashMove = Animator.StringToHash("isMove");
+    private readonly int hashSpeed = Animator.StringToHash("Speed");
+    private readonly int hashDie = Animator.StringToHash("Die");
+    private readonly int hashDieIdx = Animator.StringToHash("DieIdx");
 
     private void Awake()
     {
@@ -47,11 +67,16 @@ public class EnemyAI : MonoBehaviour
         }
         //적 캐릭터의 Transform 컴포넌트 추출
         enemyTr = GetComponent<Transform>();
+
         //이동을 제어하는 MoveAgent클래스를 추출
         moveAgent = GetComponent<MoveAgent>();
 
+        //Animator 컴포넌트 추출
+        animator = GetComponent<Animator>();
         //코루틴의 지연시간 생성
         ws = new WaitForSeconds(0.3f);
+        //총알 발사를 제어하는 EnemyFire 클래스를 추출
+        enemyFire = GetComponent<EnemyFire>();
     }
 
     private void OnEnable()
@@ -103,12 +128,37 @@ public class EnemyAI : MonoBehaviour
             switch(state)
             {
                 case State.PATROL:
+                    //총알 발사 정지
+                    enemyFire.isFire = false;
+                    moveAgent.patrolling = true;
+                    animator.SetBool(hashMove, true);
                     break;
                 case State.TRACE:
+                    //총알 발사 정지
+                    enemyFire.isFire = false;
+                    //주인공의 위치를 넘겨 추적 모드로 변경
+                    moveAgent._traecTarget = playerTr.position;
+                    animator.SetBool(hashMove, true);
                     break;
                 case State.ATTACK:
+                    //총알 발사 시작
+                    if(enemyFire.isFire == false)
+                    {
+                        enemyFire.isFire = true;
+                    }
+                    //순찰 및 추적을 정지
+                    moveAgent.Stop();
+                    animator.SetBool(hashMove, false);
                     break;
                 case State.DIE:
+                    isDie = true;
+                    enemyFire.isFire = false;
+                    //순찰 및 추적을 정지
+                    moveAgent.Stop();
+                    //사망 애니메이션의 종류를 지정
+                    animator.SetInteger(hashDieIdx, Random.Range(0, 2));
+                    //사망 애니메이션 실행
+                    animator.SetTrigger(hashDie);
                     break;
             }
         }
@@ -122,6 +172,7 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Speed 파라미터에 이동 속도를 전달
+        animator.SetFloat(hashSpeed, moveAgent.speed);
     }
 }
