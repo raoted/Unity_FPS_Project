@@ -16,19 +16,6 @@ public class EnemyAI : MonoBehaviour
     //상태를 저장할 변수
     public State state = State.PATROL;
 
-    private int allow;
-
-    public static int Allow
-    {
-        get
-        {
-
-        }
-        set
-        {
-
-        }
-    }
     //주인공의 위치를 저장할 변수
     private Transform playerTr;
     //적 캐릭터의 위치를 저장할 변수
@@ -90,7 +77,7 @@ public class EnemyAI : MonoBehaviour
     IEnumerator CheckState()
     {
         //적 캐릭터가 사망하기 저까지 도는 무한루프
-        while(!isDie)
+        while (!isDie)
         {
             //상태가 사망이면 코루틴 함수를 종료시킴
             if (state == State.DIE) yield break;
@@ -104,7 +91,7 @@ public class EnemyAI : MonoBehaviour
                 state = State.ATTACK;
             }
             //추적 사정거리 이내인 경우
-            else if(dist <= traceDist)
+            else if (dist <= traceDist)
             {
                 state = State.TRACE;
             }
@@ -121,11 +108,11 @@ public class EnemyAI : MonoBehaviour
     IEnumerator Action()
     {
         //적 캐릭터가 사망할 때까지 무한루프
-        while(!isDie)
+        while (!isDie)
         {
             yield return ws;
             //상태에 따라 분기 처리
-            switch(state)
+            switch (state)
             {
                 case State.PATROL:
                     //총알 발사 정지
@@ -142,7 +129,7 @@ public class EnemyAI : MonoBehaviour
                     break;
                 case State.ATTACK:
                     //총알 발사 시작
-                    if(enemyFire.isFire == false)
+                    if (enemyFire.isFire == false)
                     {
                         enemyFire.isFire = true;
                     }
@@ -151,12 +138,14 @@ public class EnemyAI : MonoBehaviour
                     animator.SetBool(hashMove, false);
                     break;
                 case State.DIE:
+                    this.gameObject.tag = "Untagged";
+
                     isDie = true;
                     enemyFire.isFire = false;
                     //순찰 및 추적을 정지
                     moveAgent.Stop();
                     //사망 애니메이션의 종류를 지정
-                    animator.SetInteger(hashDieIdx, Random.Range(0, 2));
+                    animator.SetInteger(hashDieIdx, Random.Range(0, 3));
                     //사망 애니메이션 실행
                     animator.SetTrigger(hashDie);
                     break;
@@ -166,7 +155,7 @@ public class EnemyAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

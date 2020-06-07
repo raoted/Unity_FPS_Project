@@ -982,6 +982,7 @@ GameObject:
   - component: {fileID: 2489774221034949877}
   - component: {fileID: 2489774221034949882}
   - component: {fileID: 1829118385}
+  - component: {fileID: -3829003853131342386}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1096,6 +1097,11 @@ MonoBehaviour:
     reload:
     - {fileID: 8300000, guid: fadf80bb36a4b4b11956cd0e19f9a859, type: 3}
     - {fileID: 8300000, guid: 479d94af985554c7e9f8a50c3eeea6d1, type: 3}
+  magazineImg: {fileID: 0}
+  magazineText: {fileID: 0}
+  maxBullet: 10
+  remainingBullet: 10
+  reloadTime: 2
 --- !u!82 &1829118385
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1192,6 +1198,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3829003853131342386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2489774219913131765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6707f614074f9a740b32d9082ebb961c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currHp: 0
+  bloodScreen: {fileID: 0}
+  hpBar: {fileID: 0}
 --- !u!1 &2489774219913131767
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,6 +1505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6219c3963fcfc2a48b2ce5c65e3177da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   _color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _radius: 0.1
 --- !u!1001 &2489774220419236380
